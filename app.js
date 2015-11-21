@@ -1,43 +1,134 @@
-// INHERETING FROM THE EVENT EMMITER************************************************
-'use strict';
+// //MAKING A SERVER
+// var http = require('http'); 
+// var fs = require('fs'); 
 
-var EventEmitter = require('events');
-// var util = require('util');
-
-class Greetr extends EventEmitter{
-	constructor(){
-		super();
-		this.greeting = "hello world!";
-	}
-
-	greet(data){
-		console.log(this.greeting + " : " + data);
-		this.emit('greet', data);
-	}
-}
-// function Greetr(){
-// 	EventEmitter.call(this);
-// 	this.greeting = 'hello world!';
-// }
-
-//any objects created from Greetr should have all the properties and methods from EventEmitter.
-//Greetr is now also an event emitter.
-// util.inherits(Greetr, EventEmitter);
+// http.createServer(function(req, res){
+// 	console.log(req.url)
+// 	if (req.url === '/'){
+// 		fs.createReadStream(__dirname + "/index.html").pipe(res);
+// 	}
 
 
-// you can also now add Greetr's own porperties and methods.
-// Greetr.prototype.greet = function(data){
-// 	console.log(this.greeting + " : " + data);
-// 	this.emit('greet', data);
-// }
+// 	else if (req.url == '/api'){
+// 		res.writeHead(200, {'Content-Type': 'application/json'});
+// 		var obj = {
+// 			firstname: 'Rosy', 
+// 			lastname: 'Sanchez'
+// 		};
+// 		res.end(JSON.stringify(obj));
+// 	}
 
-var greeter1 = new Greetr();
+// 	else {
+// 	res.writeHead(404); 
+// 	res.end();
 
-greeter1.on('greet', function(data){
-	console.log('someone just has greeted ' +  data);
-});
 
-greeter1.greet('Rosy');
+
+// }).listen(1337, '127.0.0.1'); 
+
+// //STREAMS
+// // Chunks are pieces of data being sent through a stream.
+// streams are event emitters. Any streams created also have access to "on".
+// There are also different types of streams! Readable streams, writable stream, etc.
+// readable stream = only read the data, but cannot send data
+// writable stream = send data, but no read
+// duplex = you can do both! read and write.
+// Streams are an abstract class ( a type of consturtor you don't work with, but you inheret from')
+
+var fs = require('fs');
+
+var readable = fs.createReadStream(__dirname + '/greet.txt', {encoding: 'utf8', highWaterMark: 16 * 1024 });
+
+var writable = fs.createWriteStream(__dirname + '/greetcopy.txt');
+
+readable.on('data', function(chunk){
+	console.log(chunk.length);
+	writable.write(chunk);
+
+})
+
+
+// //ASYNCHRONOUS FS READING
+// var fs = require('fs');
+
+// var greet = fs.readFileSync(__dirname + '/greet.txt', 'utf8');
+// console.log(greet);
+
+// var greet2 = fs.readFile(__dirname + '/greet.txt', 'utf8',
+// // When the libUV engine is done reading this file, it will then 
+// // run the function below, and JS outside of this asynch file function
+// // will continue to run as well. 
+
+// // ERROR FIRST CALL-BACK: null if no error, otherwise it will contain an 
+// // object defining an error. So when you give node a callback to invoke, 
+// // the first paramater will be either an error, or null.
+// 	function(err, data){
+// 		console.log(data);
+// 	});
+
+// // the console.log below will run before the asynch console.log(data) runs.
+// // shows that async will not stop js code from running as it's doing its thing.
+
+// console.log("we are all done with the code");
+
+
+// //BUFFERS AND THE BUFFER MODULE***************************************************
+// var buf = new Buffer("Hello", "utf8");
+// console.log(buf);
+
+// console.log(buf.toJSON());
+// buf.write('wo');
+// console.log(buf.toString())
+
+// var buffer = new ArrayBuffer(8);
+// //ArrayBuffer is a new feature in ES6 this is storing raw binary data.
+// var view = new Int32Array(buffer);
+// view[0] = 1;
+// view[1]  = 15;
+// console.log(view);
+
+
+
+// // INHERETING FROM THE EVENT EMMITER************************************************
+// 'use strict';
+
+// var EventEmitter = require('events');
+// // var util = require('util');
+
+// // class Greetr extends EventEmitter{
+// // 	constructor(){
+// // 		super();
+// // 		this.greeting = "hello world!";
+// // 	}
+
+// // 	greet(data){
+// // 		console.log(this.greeting + " : " + data);
+// // 		this.emit('greet', data);
+// // 	}
+// // }
+// // function Greetr(){
+// // 	EventEmitter.call(this);
+// // 	this.greeting = 'hello world!';
+// // }
+
+// //any objects created from Greetr should have all the properties and methods from EventEmitter.
+// //Greetr is now also an event emitter.
+// // util.inherits(Greetr, EventEmitter);
+
+
+// // you can also now add Greetr's own porperties and methods.
+// // Greetr.prototype.greet = function(data){
+// // 	console.log(this.greeting + " : " + data);
+// // 	this.emit('greet', data);
+// // }
+
+// var greeter1 = new Greetr();
+
+// greeter1.on('greet', function(data){
+// 	console.log('someone just has greeted ' +  data);
+// });
+
+// greeter1.greet('Rosy');
 
 // //THE EVENT TRANSMITTER*********************************
 // var Emitter = require("./emitter");
